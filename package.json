@@ -1,0 +1,22 @@
+{
+  "name": "iot-data-logger",
+  "version": "0.3.0",
+  "description": "A very simple IoT data logger",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "ds18b20-raspi": "^0.2.5",
+    "node-bme280": "*"
+  },
+  "devDependencies": {
+  },
+  "otherDeps" : {
+    "skicka" : "https://github.com/google/skicka  to upload to Google Docs."
+  },
+  "repository": {
+  },
+  "license": "MIT"
+}
