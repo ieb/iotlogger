@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "ds18b20-raspi": "^0.2.5",
-    "node-bme280": "*"
+    "node-bme280": "*",
+    "forever": "*"
   },
   "devDependencies": {
   },

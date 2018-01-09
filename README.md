@@ -1,6 +1,6 @@
 # Remote logger.
 
-This simple node program is to log data collected from multiple 1 wire temperature sensors and a BME280 on a Raspberry Pi. It
+This simple node program is to log data collected from multiple 1 wire temperature sensors (ds18b20) and a BME280 (https://www.bosch-sensortec.com/bst/products/all_products/bme280) on a Raspberry Pi. It
 writes the data to disk in csv format which can then be synced with Google Drive using Google Skicka from https://github.com/google/skicka 
 
 To run use forever
