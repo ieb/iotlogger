@@ -9,9 +9,11 @@ To run use forever
 
 The data will appear in iotdata/
 
-To sync with Google Drive setup skicka and run skicka in a corntab eg.
+To sync with Google Drive setup skicka and run skicka in a crontab see transfer.data.sh
 
-    30 * * * * /usr/local/bin/skicka upload /home/ieb/iotlogger/iotdata iotdata/ 1> /home/ieb/iotlogger/lastupload.log 2>&1
+Since this is intended to run of a 3G modem providing Wifi connectivity the network interface is only up when the data is being transfered. The rest of the time it is down to minimise data usage. ntp will need to sync when the network interface is up.
+
+The iotologger uses forever to stay up started by a systemd service definition (iotlogger.service and run.sh)
 
 
 # Why ?

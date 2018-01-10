@@ -84,13 +84,13 @@ function pad2Zeros(n) {
 // dump everything out.
 setInterval(() => {
     var d = new Date();
-    data[0] = d.toISOString();
+    data[0] = "\""+d.toISOString()+"\"";
     var fname = "iotdata/data-"+d.getFullYear()+pad2Zeros(d.getMonth()+1)+pad2Zeros(d.getDate())+".csv";
     var output = "";
     if ( currentfile !== fname || newsensors ) {
         currentfile = fname;
         newsensors = false;
-        output = headers.join(",")+"\n";
+        output = "\""+headers.join("\",\"")+"\""+"\n";
     }
     output = output + data.join(",")+"\n";
     fs.appendFile(fname,output, (err) => {
@@ -99,4 +99,5 @@ setInterval(() => {
         }
     });
 }, 60000);
+
 
