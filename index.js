@@ -18,12 +18,55 @@
 const fs = require('fs');
 const sensors = require('ds18b20-raspi');  
 const BME280 = require('node-bme280');
+const gpio = require('rpi-gpio'); // used for rain sensors.
 var barometer = new BME280({address: 0x76});
 
 var data = [0, 0.0,0.0,0.0];
-var headers = [ "ts", "t", "p", "rh"];
+var headers = [ "ts", "t", "p", "rh", "g17", "g27", "g22", "g23" ];
 var newsensors = false;
 var currentfile = "";
+var sensorPins = [ "17", "27", "22", "23" ];
+
+gpio.setMode(gpio.MODE_BCM);
+for (var i = 0; i < sensorPins.length; i++) {
+    setupSensor(i);
+    headers.push("g"+sensorPins[i]);
+    data[i+4] = 0;
+};
+function setupSensor(i) {
+    gpio.setup(sensorPins[i], gpio.DIR_IN, function(err) {
+        if (err) {
+            console.error("GPIO Pin error ", pin,  err);
+        } else {
+            setInterval(() => {
+                gpio.read(sensorPins[i], (err, val) => {
+                    if (err) {
+                        console.error("Failed to read gpio ",sensorPins[i],err);
+                    } else if ( val) {
+                        data[i+4] = 0;
+                    } else {
+                        data[i+4] = 1;
+                    }
+                });
+            },10000);
+        }
+    }); 
+}
+//setInterval(() => {
+//        console.info(data);
+//},1000);
+
+function readSensor(n) {
+    gpio.read(sensorPins[n], (err, val) => {
+        if (err) {
+            console.error("Failed to read gpio ",sensorPins[n],err);
+        } else if ( val) {
+            data[n+4] = 0;
+        } else {
+            data[n+4] = 1;
+        }
+    });
+}
 
 try {
     barometer.begin((err) => {
@@ -65,18 +108,21 @@ setInterval(() => {
                 readings[temps[i].id] = temps[i].t;
             }
             // add new headers.
-            if ( headers.length-4 < temps.length) {
-                for(var i = headers.length-4; i < temps.length; i++) {
+            var tempsStart = 4+sensorPins.length;
+            if ( headers.length-tempsStart < temps.length) {
+                for(var i = headers.length-tempsStart; i < temps.length; i++) {
                     headers.push(temps[i].id);
                 }
+
                 newsensors = true;                    
             }
-            for(var i = 4; i < headers.length; i++) {
+            for(var i = tempsStart; i < headers.length; i++) {
                 data[i] = readings[headers[i]];
             }
         }
       });
     }, 10000);
+
 function pad2Zeros(n) {
     return ("00" + n).slice(-2);
 }
@@ -92,7 +138,11 @@ setInterval(() => {
         newsensors = false;
         output = "\""+headers.join("\",\"")+"\""+"\n";
     }
-    output = output + data.join(",")+"\n";
+    output = output + data[0];
+    for (var i = 1; i < data.length; i++) {
+        output = output + "," + data[i].toFixed(2);
+    };
+    output = output + "\n";
     fs.appendFile(fname,output, (err) => {
         if ( err ) {
             console.log("Failed to write to ", fname);

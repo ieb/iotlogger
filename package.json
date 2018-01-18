@@ -10,6 +10,7 @@
   "dependencies": {
     "ds18b20-raspi": "^0.2.5",
     "node-bme280": "*",
+    "rpi-gpio": "*",
     "forever": "*"
   },
   "devDependencies": {
