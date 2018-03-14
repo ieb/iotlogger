@@ -5,7 +5,6 @@ ConditionPathExists=!/home/ieb/iotlogger/dontrun
 
 [Service]
 EnvironmentFile=-/etc/default/iotlogger
-ExecStartPre=/sbin/ip link set dev wlan0 down
 ExecStart=/usr/bin/sudo -u ieb -i -n /home/ieb/iotlogger/run.sh start
 ExecStop=/usr/bin/sudo -u ieb -i -n /home/ieb/iotlogger/run.sh stop
 Type=forking
